@@ -10,30 +10,43 @@ public class PrettyPrinter implements PrinterInterface {
 
         Scanner scanner = new Scanner(new File(filePath));
         Map<Integer, Integer> widhtSizes = new HashMap<>();
+
+        //divided csv by row
         scanner.useDelimiter("\r\n");
+
+        int columnsNumber = 0;
         List<String> reportElements = new ArrayList<>();
-        int columnNumber = 0;
+
         while (scanner.hasNext()) {
             int index = 0;
+
+            //divide row into columns
             String[] split = scanner.next().split(";");
-            columnNumber = split.length;
+
+            columnsNumber = split.length;
+
             for (String s : split) {
+                //filling map with maximum String length
                 if (widhtSizes.getOrDefault(index, 0) < s.length()) {
                     widhtSizes.put(index, s.length() + 1);
                 }
                 index = ++index;
+                //adding all cells to List
                 reportElements.add("|" + s);
             }
-//            System.out.printf("%-25s", scanner.next() + "|");
         }
-        int totalLength = widhtSizes.values().stream().mapToInt(Integer::intValue).sum() + columnNumber;
+        //getting total width of report for splitter printing
+        int totalLength = widhtSizes.values().stream().mapToInt(Integer::intValue).sum() + columnsNumber;
+
         printSpecial(totalLength, '-');
         int position = 0;
         boolean isHeader = true;
+
+        //printing report
         for (String reportElement : reportElements) {
-            if (position % columnNumber == 0) {
+            if (position % columnsNumber == 0) {
                 System.out.println();
-                if (isHeader && (position + 1) % (columnNumber+1) == 0) {
+                if (isHeader && (position + 1) % (columnsNumber + 1) == 0) {
                     printSpecial(totalLength, '-');
                     System.out.println();
                     isHeader = false;
@@ -43,12 +56,13 @@ public class PrettyPrinter implements PrinterInterface {
             System.out.print(reportElement);
             printSpecial((widhtSizes.get(position) - reportElement.length()), ' ');
             position++;
-            if (position % columnNumber == 0) {
+            if (position % columnsNumber == 0) {
                 System.out.print('|');
             }
         }
         System.out.println();
         printSpecial(totalLength, '-');
+
         scanner.close();
     }
 
