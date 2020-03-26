@@ -102,7 +102,7 @@ public class ReportSpliterator implements Spliterator<ReportLineModel> {
         Stream.of(declaredFields).filter(field -> field.getName().contains("Max")).forEach(declaredField -> {
             try {
                 final int fieldLength = declaredField.getInt(null);
-                if (!evenNumber.test(fieldLength)) declaredField.setInt(null, fieldLength + 1);
+                if (evenNumber.negate().test(fieldLength)) declaredField.setInt(null, fieldLength + 1);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
