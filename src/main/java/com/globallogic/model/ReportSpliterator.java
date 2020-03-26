@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -27,7 +28,7 @@ public class ReportSpliterator implements Spliterator<ReportLineModel> {
     private String currency;
     private String other;
 
-    Predicate<Integer> evenNumber = x -> x % 2 == 0;
+    IntPredicate evenNumber = x -> x % 2 == 0;
 
     public ReportSpliterator(Spliterator<String> lineSpliterator) {
         this.lineSpliterator = lineSpliterator;
