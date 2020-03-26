@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class ReportSpliterator implements Spliterator<ReportLineModel> {
@@ -25,6 +26,8 @@ public class ReportSpliterator implements Spliterator<ReportLineModel> {
     private BigDecimal amount;
     private String currency;
     private String other;
+
+    Predicate<Integer> evenNumber = x -> x % 2 == 0;
 
     public ReportSpliterator(Spliterator<String> lineSpliterator) {
         this.lineSpliterator = lineSpliterator;
@@ -98,7 +101,7 @@ public class ReportSpliterator implements Spliterator<ReportLineModel> {
         Stream.of(declaredFields).filter(field -> field.getName().contains("Max")).forEach(declaredField -> {
             try {
                 final int fieldLength = declaredField.getInt(null);
-                if (fieldLength % 2 != 0) declaredField.setInt(null, fieldLength + 1);
+                if (!evenNumber.test(fieldLength)) declaredField.setInt(null, fieldLength + 1);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
